@@ -280,7 +280,7 @@ export default class Document extends EmitterMixin() {
 	 */
 	public getRootNames( includeDetached = false ): Array<string> {
 		return Array.from( this.roots )
-			.filter( root => root.rootName != graveyardName && ( includeDetached || root.isAttached() ) )
+			.filter( root => root.rootName != graveyardName && ( includeDetached || root.isAttached() ) && !root._isLazy )
 			.map( root => root.rootName );
 	}
 

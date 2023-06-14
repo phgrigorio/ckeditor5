@@ -79,5 +79,7 @@ declare module '@ckeditor/ckeditor5-core' {
 		 * ```
 		 */
 		rootsAttributes?: Record<string, RootAttributes>;
+
+		lazyRoots?: Array<string>;
 	}
 }

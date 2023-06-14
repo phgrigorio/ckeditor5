@@ -11,7 +11,7 @@ import Operation from './operation';
 
 import type Document from '../document';
 import { CKEditorError } from '@ckeditor/ckeditor5-utils';
-import type { Selectable } from '../selection';
+import type RootElement from '../rootelement';
 
 /**
  * Operation that creates (or attaches) or detaches a root element.
@@ -81,8 +81,8 @@ export default class RootOperation extends Operation {
 	/**
 	 * @inheritDoc
 	 */
-	public get affectedSelectable(): Selectable {
-		return this._document.getRoot( this.rootName );
+	public get affectedSelectable(): RootElement {
+		return this._document.getRoot( this.rootName )!;
 	}
 
 	/**

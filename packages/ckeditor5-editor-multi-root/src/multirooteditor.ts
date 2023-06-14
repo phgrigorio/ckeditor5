@@ -161,6 +161,14 @@ export default class MultiRootEditor extends DataApiMixin( Editor ) {
 			this.model.document.createRoot( '$root', rootName );
 		}
 
+		if ( this.config.get( 'lazyRoots' ) ) {
+			for ( const rootName of this.config.get( 'lazyRoots' )! ) {
+				const root = this.model.document.createRoot( '$root', rootName );
+
+				root._isLazy = true;
+			}
+		}
+
 		if ( this.config.get( 'rootsAttributes' ) ) {
 			const rootsAttributes = this.config.get( 'rootsAttributes' )!;
 
@@ -498,6 +506,42 @@ export default class MultiRootEditor extends DataApiMixin( Editor ) {
 		this.ui.view.removeEditable( rootName );
 
 		return editable.element!;
+	}
+
+	/**
+	 *
+	 * @param rootName
+	 * @param data
+	 * @param attributes
+	 */
+	public loadRoot( rootName: string, { data = '', attributes = {} as Record<string, unknown> } = {} ) {
+		const root = this.model.document.getRoot( rootName );
+
+		if ( !root ) {
+			return;
+		}
+
+		if ( !root._isLazy ) {
+			return;
+		}
+
+		this.model.change( writer => {
+			if ( root.maxOffset === 0 ) {
+				if ( data ) {
+					writer.insert( this.data.parse( data, root ), root, 0 );
+				}
+
+				for ( const key of Object.keys( attributes ) ) {
+					this._registeredRootsAttributesKeys.add( key );
+
+					writer.setAttribute( key, attributes[ key ], root );
+				}
+			}
+
+			root._isLazy = false;
+
+			this.model.document.differ._refreshRoot( root );
+		} );
 	}
 
 	/**

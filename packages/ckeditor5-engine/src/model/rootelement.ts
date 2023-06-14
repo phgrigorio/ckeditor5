@@ -31,6 +31,11 @@ export default class RootElement extends Element {
 	public _isAttached = true;
 
 	/**
+	 * @internal
+	 */
+	public _isLazy = false;
+
+	/**
 	 * Creates root element.
 	 *
 	 * @param document Document that is an owner of this root.

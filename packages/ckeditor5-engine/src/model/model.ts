@@ -155,7 +155,13 @@ export default class Model extends ObservableMixin() {
 		injectSelectionPostFixer( this );
 
 		// Post-fixer which takes care of adding empty paragraph elements to the empty roots.
-		this.document.registerPostFixer( autoParagraphEmptyRoots );
+		this.document.registerPostFixer( writer => {
+			if ( !writer.batch.isLocal ) {
+				return false;
+			}
+
+			return autoParagraphEmptyRoots( writer );
+		} );
 
 		// The base implementation for "decorated" method with remapped arguments.
 		this.on<ModelInsertContentEvent>( 'insertContent', ( evt, [ content, selectable ] ) => {
@@ -1097,7 +1103,6 @@ export default class Model extends ObservableMixin() {
 	/**
 	 * Common part of {@link module:engine/model/model~Model#change} and {@link module:engine/model/model~Model#enqueueChange}
 	 * which calls callbacks and returns array of values returned by these callbacks.
-	 *
 	 */
 	private _runPendingChanges() {
 		const ret = [];
