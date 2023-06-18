@@ -103,7 +103,7 @@ export default class MultiRootEditor extends DataApiMixin( Editor ) {
 		const rootNames = Object.keys( sourceElementsOrData );
 		const sourceIsData = rootNames.length === 0 || typeof sourceElementsOrData[ rootNames[ 0 ] ] === 'string';
 
-		if ( sourceIsData && config.initialData !== undefined ) {
+		if ( sourceIsData && config.initialData !== undefined && Object.keys( config.initialData ).length > 0 ) {
 			// Documented in core/editor/editorconfig.jsdoc.
 			// eslint-disable-next-line ckeditor5-rules/ckeditor-error-message
 			throw new CKEditorError( 'editor-create-initial-data', null );
