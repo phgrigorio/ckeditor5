@@ -264,6 +264,8 @@ export default class MultiRootEditor extends DataApiMixin( Editor ) {
 				evt.stop();
 			}
 		}, { priority: 'high' } );
+
+		this.decorate( 'loadRoot' );
 	}
 
 	/**
@@ -517,15 +519,11 @@ export default class MultiRootEditor extends DataApiMixin( Editor ) {
 	public loadRoot( rootName: string, { data = '', attributes = {} as Record<string, unknown> } = {} ) {
 		const root = this.model.document.getRoot( rootName );
 
-		if ( !root ) {
+		if ( !root || !root._isLazy ) {
 			return;
 		}
 
-		if ( !root._isLazy ) {
-			return;
-		}
-
-		this.model.change( writer => {
+		this.model.enqueueChange( { isUndoable: false }, writer => {
 			if ( root.maxOffset === 0 ) {
 				if ( data ) {
 					writer.insert( this.data.parse( data, root ), root, 0 );
