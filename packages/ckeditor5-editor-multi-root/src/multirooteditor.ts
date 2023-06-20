@@ -173,7 +173,7 @@ export default class MultiRootEditor extends DataApiMixin( Editor ) {
 			const rootsAttributes = this.config.get( 'rootsAttributes' )!;
 
 			for ( const [ rootName, attributes ] of Object.entries( rootsAttributes ) ) {
-				if ( !rootNames.includes( rootName ) ) {
+				if ( !this.model.document.getRoot( rootName ) ) {
 					/**
 					 * Trying to set attributes on a non-existing root.
 					 *
